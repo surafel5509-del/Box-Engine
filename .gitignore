@@ -1,0 +1,17 @@
+# Gradle and Android build outputs
+.gradle/
+**/build/
+local.properties
+*.iml
+
+# Android Studio and IntelliJ
+.idea/
+.DS_Store
+
+# Native build intermediates
+.cxx/
+.externalNativeBuild/
+
+# Python tooling artifacts
+__pycache__/
+*.py[cod]
