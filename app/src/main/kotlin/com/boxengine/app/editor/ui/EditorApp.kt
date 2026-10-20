@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -460,7 +461,7 @@ private fun WorkspaceViewport(controller: EditorController) {
 }
 
 @Composable
-private fun GamePreviewOverlay(controller: EditorController) {
+private fun BoxScope.GamePreviewOverlay(controller: EditorController) {
     Row(
         modifier = Modifier.align(Alignment.TopStart).padding(12.dp)
             .clip(RoundedCornerShape(9.dp)).background(Color(0xD9101823)).padding(horizontal = 11.dp, vertical = 7.dp),

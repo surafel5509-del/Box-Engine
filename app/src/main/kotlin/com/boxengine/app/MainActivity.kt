@@ -14,7 +14,6 @@ import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.platform.setContent
 import com.boxengine.app.editor.model.EditorController
 import com.boxengine.app.editor.ui.BoxEngineEditorApp
 import com.boxengine.engine.BoxEngine

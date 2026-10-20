@@ -574,7 +574,7 @@ private fun Scene3DViewport(controller: EditorController, modifier: Modifier = M
                             (controller.cameraOrbit.y + delta.y * 0.3f).coerceIn(-75f, 75f),
                         )
                     } else {
-                        val id = selectedId
+                        val id = checkNotNull(selectedId)
                         val totalDelta = change.position - startPosition
                         val worldDelta = totalDelta / (min(canvasWidth, canvasHeight) * 0.18f * controller.cameraZoom).coerceAtLeast(10f)
                         val transform = when (controller.tool) {
@@ -660,7 +660,7 @@ private fun Scene3DViewport(controller: EditorController, modifier: Modifier = M
                         face.drop(1).forEach { index -> lineTo(worldPoints[index].x, worldPoints[index].y) }
                         close()
                     }
-                    drawPath(color.copy(alpha = if (faceIndex % 2 == 0) 0.22f else 0.12f), path)
+                    drawPath(path, color.copy(alpha = if (faceIndex % 2 == 0) 0.22f else 0.12f))
                 }
                 val edges = listOf(
                     0 to 1, 0 to 2, 0 to 4, 1 to 3, 1 to 5, 2 to 3,
