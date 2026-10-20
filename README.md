@@ -1,19 +1,45 @@
 <!-- Path: README.md -->
 # Box Engine — Android GLES 3.0 game engine
 
-An Android-only Kotlin + C++20 game-engine project. The repository carries the Phase 1 runtime foundation, Phase 2 EGL/OpenGL ES 3.0 renderer, Phase 3 ECS/scene/asset systems, Phase 4 2D rendering features, Phase 5 Oboe audio, an in-progress Phase 6 3D renderer, and in-progress UI/debug tooling. The application uses an Android `Activity` and `SurfaceView`; it does not include desktop windowing code, Vulkan, GLFW, or SDL.
+An Android-only Kotlin + C++20 game-engine project. The repository carries the Phase 1 runtime foundation, Phase 2 EGL/OpenGL ES 3.0 renderer, Phase 3 ECS/scene/asset systems, Phase 4 2D rendering features, Phase 5 Oboe audio, an in-progress Phase 6 3D renderer, the native UI/debug tools, and a new Android-native Jetpack Compose editor. The app uses Android `Activity`/Compose APIs and an optional `SurfaceView` for the retained GLES runtime; it does not include desktop windowing code, Vulkan, GLFW, or SDL.
+
+## Android-native Box Engine Editor · Phase 1
+
+The app now opens into an original Box Engine editor with a premium dark palette and responsive phone/tablet layouts. The editor is implemented in Kotlin and Jetpack Compose; it does not use Compose Desktop or desktop-only dependencies.
+
+- **Scene workflow:** 2D scene and game tabs, hierarchy creation/selection/rename/visibility/reorder/reparent/duplicate/delete, undo/redo, save/open/export versioned JSON scenes, transform editing, grid snapping, pinch zoom/pan, and move/rotate/scale touch tools.
+- **2D workflow:** sprite renderer, camera settings, Rigidbody 2D and Collider 2D inspector controls, image cropping in the Sprite Editor, a color/texture Tile Palette, and transform keyframes with linear interpolation.
+- **Project assets:** Android document-picker imports are copied into app-private project folders and indexed in the scene JSON. Supported categories are images, audio, text/scripts, JSON scenes, glTF/GLB models, and other binary files; imported files are capped at 128 MiB.
+- **Playable sample:** `Sample Platformer` starts with a touch-controlled player, static platforms, gravity, AABB collision, a collectable coin, and an enemy reset. This is an editor-preview prototype, not the completed native physics engine.
+- **3D scope:** the editor can create and transform cube/plane scene data in an orbitable projected wireframe view. It is not the finished GLES 3D viewport; GPU mesh rendering, PBR, shadows, and post-processing remain in progress. The existing native GLES surface and its shader-reload flow remain available from the project menu.
+- **Honest feature boundary:** Lua, a production-grade physics engine, sprite-sheet slicing/atlas authoring, skeletal animation, 3D runtime play, and a full production 3D renderer are not complete in this phase.
+
+### Build and run
+
+Use Android Studio with JDK 17, Android SDK Platform 34, NDK, and CMake 3.22.1. From the repository root:
+
+```sh
+./gradlew :app:assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+Open `BoxEngine` in Android Studio and run the `app` configuration to launch on a device or emulator. The wrapper downloads Gradle 8.7. The project retains its Android NDK/CMake native build and GLES 3.0 requirement. The debug APK is also built by the `Android APK` GitHub Actions workflow and uploaded as `box-engine-debug-apk`.
+
+The in-app **Save project** action writes `SampleScene.json` and copied assets under the app's private `files/BoxEngineProjects/Starter2D` directory. Use **Export scene JSON** for a user-selected location; use **Open scene JSON** to load a compatible exported scene.
 
 ## Architecture
 
 ```text
 ┌──────────────── Android application process ────────────────┐
 │                                                             │
-│  MainActivity (Kotlin) ── Activity lifecycle ───────────┐    │
-│       │                                                  │    │
-│       └── EngineSurfaceView ── SurfaceHolder callbacks  │    │
-│                    │                                     │    │
-│                    └── BoxEngine Kotlin API              │    │
-│                              │ JNI                       │    │
+│  MainActivity (ComponentActivity) ── ComposeView            │
+│       │                                  │                  │
+│       │                                  ├─ EditorController│
+│       │                                  │  + Compose tools │
+│       └─ NativeEnginePanel (optional) ─ EngineSurfaceView  │
+│                                          │ SurfaceHolder    │
+│                                          └─ BoxEngine API   │
+│                                                   │ JNI      │
 │  ┌───────────────────────────▼────────────────────────┐  │    │
 │  │ C++20 EngineRuntime (dedicated render thread)       │  │    │
 │  │  ├─ TimeSystem (fixed update + variable frame time) │  │    │
