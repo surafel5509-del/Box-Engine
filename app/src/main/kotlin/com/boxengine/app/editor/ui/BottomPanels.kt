@@ -373,7 +373,7 @@ fun AnimationPanel(controller: EditorController, modifier: Modifier = Modifier, 
             TextButton(onClick = { controller.addAnimationKeyframe() }, enabled = selected != null) {
                 Text("+ Key", color = EditorColors.accent, fontSize = 10.sp)
             }
-            TextButton(onClick = { controller.setAnimationPreviewPlaying(!controller.animationPreviewPlaying) }, enabled = keys.isNotEmpty()) {
+            TextButton(onClick = { controller.setAnimationPreviewState(!controller.animationPreviewPlaying) }, enabled = keys.isNotEmpty()) {
                 Text(if (controller.animationPreviewPlaying) "Ⅱ" else "▶", color = EditorColors.accent, fontSize = 11.sp)
             }
         }

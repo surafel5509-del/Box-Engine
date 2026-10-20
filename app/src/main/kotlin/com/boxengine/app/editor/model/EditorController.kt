@@ -482,7 +482,7 @@ class EditorController(context: Context) {
         return start + delta * t
     }
 
-    fun setAnimationPreviewPlaying(playing: Boolean) {
+    fun setAnimationPreviewState(playing: Boolean) {
         animationPreviewPlaying = playing
         if (playing && timelineTime >= animationDuration) timelineTime = 0f
     }
